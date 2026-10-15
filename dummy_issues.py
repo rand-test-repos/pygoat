@@ -18,3 +18,14 @@ def always_true(flag):
     if flag or not flag:
         return "always"
     return "never"
+
+
+def always_false(count):
+    if count < 0 and count > 0:
+        return "impossible"
+    return "possible"
+
+
+def unreachable(value):
+    return value
+    print("never printed")
