@@ -39,4 +39,8 @@ jobs:
           curl -s -u "$SONAR_TOKEN:" \
             "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=rand-test-repos_PyGoat&branch=${GITHUB_REF_NAME}" \
           | jq -r '.projectStatus | "Gate: \(.status)", (.conditions[] | select(.status=="ERROR") | "  \(.metricKey): actual=\(.actualValue) threshold=\(.errorThreshold) (\(.comparator))")'
+          echo "New-code issues (rules behind issue-based conditions such as new_violations):"
+          curl -s -u "$SONAR_TOKEN:" \
+            "$SONAR_HOST_URL/api/issues/search?components=rand-test-repos_PyGoat&branch=${GITHUB_REF_NAME}&inNewCodePeriod=true&issueStatuses=OPEN,CONFIRMED&ps=500" \
+          | jq -r '.issues[] | "  \(.rule) [\(.severity)] \(.component | split(":")[1]):\(.line // "-") \(.message)"'
 
