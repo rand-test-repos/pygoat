@@ -48,7 +48,7 @@ jobs:
           code=$(curl -s -o sca.json -w '%{http_code}' -H "Authorization: Bearer $SONAR_API_TOKEN" \
             "$SONAR_HOST_URL/api/v2/sca/issues-releases?projectKey=rand-test-repos_PyGoat&branchKey=${GITHUB_REF_NAME}&qualities=SECURITY&severities=HIGH&severities=BLOCKER&pageSize=500")
           if [ "$code" = 200 ]; then
-            jq -r '.issuesReleases | "  \(length) risk(s)", (group_by(.release.packageName + "@" + .release.version)[] | "  \(.[0].release.packageName)@\(.[0].release.version) (\(if .[0].release.directSummary then "direct" else "transitive" end)): " + (map("\(.vulnerabilityId) \(.severity) cvss=\(.cvssScore // "n/a")") | join(", ")))' sca.json
+            jq -r '.issuesReleases | "  \(length) risk(s)", (group_by(.release.packageName + "@" + .release.version)[] | "  \(.[0].release.packageName)@\(.[0].release.version) (\(if .[0].release.directSummary then "direct" else "transitive" end)):", (.[] | "     - \(.vulnerabilityId) \(.severity) cvss=\(.cvssScore // "n/a")"))' sca.json
           else
             echo "  SCA API returned HTTP $code: $(head -c 300 sca.json)"
           fi
