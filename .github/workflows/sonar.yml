@@ -16,7 +16,7 @@ jobs:
       - name: Install Pillow build dependencies
         run: sudo apt-get update && sudo apt-get install -y libjpeg-dev zlib1g-dev
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sqs-dce-shichao.ngrok.io
