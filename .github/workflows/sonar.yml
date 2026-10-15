@@ -30,4 +30,13 @@ jobs:
             -Dsonar.test.inclusions=**/tests.py
             -Dsonar.qualitygate.wait=true
             -Dsonar.qualitygate.timeout=300
+      - name: Show quality gate details
+        if: always()
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: https://sqs-dce-shichao.ngrok.io
+        run: |
+          curl -s -u "$SONAR_TOKEN:" \
+            "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=rand-test-repos_PyGoat&branch=${GITHUB_REF_NAME}" \
+          | jq -r '.projectStatus | "Gate: \(.status)", (.conditions[] | select(.status=="ERROR") | "  \(.metricKey): actual=\(.actualValue) threshold=\(.errorThreshold) (\(.comparator))")'
 
