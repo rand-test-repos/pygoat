@@ -43,7 +43,7 @@ jobs:
           echo "New-code issues (rules behind issue-based conditions such as new_violations):"
           curl -s -u "$SONAR_TOKEN:" \
             "$SONAR_HOST_URL/api/issues/search?components=rand-test-repos_PyGoat&branch=${GITHUB_REF_NAME}&inNewCodePeriod=true&issueStatuses=OPEN,CONFIRMED&ps=500" \
-          | jq -r '.issues[] | "  \(.rule) [\(.severity)] \(.component | split(":")[1]):\(.line // "-") \(.message)"'
+          | jq -r '.issues[] | "-  [\(.severity)] \(.component | split(":")[1]):\(.line // "-") \(.rule) / \(.message);"'
           echo "Dependency risks at HIGH or BLOCKER severity (sca_severity_any_security fails at >= HIGH):"
           code=$(curl -s -o sca.json -w '%{http_code}' -H "Authorization: Bearer $SONAR_API_TOKEN" \
             "$SONAR_HOST_URL/api/v2/sca/issues-releases?projectKey=rand-test-repos_PyGoat&branchKey=${GITHUB_REF_NAME}&qualities=SECURITY&severities=HIGH&severities=BLOCKER&pageSize=500")
