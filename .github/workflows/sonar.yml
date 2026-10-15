@@ -21,3 +21,5 @@ jobs:
         with:
           args: >
             -Dsonar.projectKey=rand-test-repos_PyGoat
+            -Dsonar.projectName=PyGoat
+
