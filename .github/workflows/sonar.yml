@@ -25,6 +25,8 @@ jobs:
             -Dsonar.projectKey=rand-test-repos_PyGoat
             -Dsonar.projectName=PyGoat
             -Dsonar.python.version=3.11
+            -Dsonar.tests=.
+            -Dsonar.test.inclusions=**/tests.py
             -Dsonar.qualitygate.wait=true
             -Dsonar.qualitygate.timeout=300
 
