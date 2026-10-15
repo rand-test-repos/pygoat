@@ -16,7 +16,7 @@ jobs:
       - name: Install Pillow build dependencies
         run: sudo apt-get update && sudo apt-get install -y libjpeg-dev zlib1g-dev
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v8
+        uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: https://sqs-dce-shichao.ngrok.io
@@ -43,4 +43,8 @@ jobs:
           curl -s -u "$SONAR_TOKEN:" \
             "$SONAR_HOST_URL/api/issues/search?components=rand-test-repos_PyGoat&branch=${GITHUB_REF_NAME}&inNewCodePeriod=true&issueStatuses=OPEN,CONFIRMED&ps=500" \
           | jq -r '.issues[] | "  \(.rule) [\(.severity)] \(.component | split(":")[1]):\(.line // "-") \(.message)"'
+          echo "Dependency risks at HIGH or BLOCKER severity (sca_severity_any_security fails at >= HIGH):"
+          curl -s -u "$SONAR_TOKEN:" \
+            "$SONAR_HOST_URL/api/v2/sca/issues-releases?projectKey=rand-test-repos_PyGoat&branchKey=${GITHUB_REF_NAME}&qualities=SECURITY&severities=HIGH&severities=BLOCKER&pageSize=500" \
+          | jq -r '.issuesReleases | "  \(length) risk(s)", (group_by(.release.packageName + "@" + .release.version)[] | "  \(.[0].release.packageName)@\(.[0].release.version) (\(if .[0].release.directSummary then "direct" else "transitive" end)): " + (map("\(.vulnerabilityId) \(.severity) cvss=\(.cvssScore // "n/a")") | join(", ")))'
 
