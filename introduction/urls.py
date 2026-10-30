@@ -2,9 +2,12 @@ from django.urls import include, path
 
 from introduction.playground.A9.api import log_function_target
 
-from . import apis, mitre, views
+from . import apis, mitre, user_export, views
 
 urlpatterns = [
+    path('user-export/search', user_export.search_users, name='search_users'),
+    path('user-export/download', user_export.download_export, name='download_export'),
+    path('user-export/archive', user_export.archive_export, name='archive_export'),
     path('accounts/', include('allauth.urls')),
     path('', views.home, name='homepage'),
     path('xss', views.xss,name="xss"),
