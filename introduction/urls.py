@@ -2,10 +2,12 @@ from django.urls import include, path
 
 from introduction.playground.A9.api import log_function_target
 
-from . import apis, mitre, views
+from . import apis, mitre, profile_serializers, views
 
 urlpatterns = [
     path('accounts/', include('allauth.urls')),
+    path('api/current-user', profile_serializers.current_user_api, name='current_user_api'),
+    path('debug-request', profile_serializers.debug_request, name='debug_request'),
     path('', views.home, name='homepage'),
     path('xss', views.xss,name="xss"),
     path('xssL',views.xss_lab,name='xss_lab'),
